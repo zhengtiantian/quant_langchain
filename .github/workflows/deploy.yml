@@ -35,15 +35,16 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            xiz001/quant_langchain:latest
-            xiz001/quant_langchain:${{ env.COMMIT_TAG }}
+            xiz001/langchain_agent:latest
+            xiz001/langchain_agent:${{ env.COMMIT_TAG }}
 
       - name: Clone quant_docker repository and update image tag
         run: |
           git clone https://zhengtiantian:${{ secrets.MAIN_REPO_PAT }}@github.com/zhengtiantian/quant_docker.git
           cd quant_docker
 
-          sed -i -E "s|(xiz001/quant_langchain:)[^[:space:]]+|\1${{ env.COMMIT_TAG }}|g" docker-compose.yml
+          # 更新 docker-compose.yml 中的 langchain-agent 镜像 tag
+          sed -i -E "s|(xiz001/(quant_langchain|langchain_agent):)[^[:space:]]+|\1${{ env.COMMIT_TAG }}|g" docker-compose.yml
 
           git config user.name "github-actions"
           git config user.email "actions@github.com"
@@ -52,7 +53,7 @@ jobs:
           # 检查是否有变化
           if ! git diff --exit-code; then
             git add docker-compose.yml
-            git commit -m "Update quant_langchain image tag to ${{ env.COMMIT_TAG }}"
+            git commit -m "Update langchain_agent image tag to ${{ env.COMMIT_TAG }}"
             git push origin update-langchain-${{ env.COMMIT_TAG }}
           else
             echo "✅ No changes detected in docker-compose.yml, skipping commit."
@@ -69,8 +70,8 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/zhengtiantian/quant_docker/pulls \
             -d '{
-              "title": "Update quant_langchain image to '${{ env.COMMIT_TAG }}'",
+              "title": "Update langchain_agent image to '${{ env.COMMIT_TAG }}'",
               "head": "update-langchain-'${{ env.COMMIT_TAG }}'",
               "base": "main",
-              "body": "This PR updates quant_langchain image tag to '${{ env.COMMIT_TAG }}'."
+              "body": "This PR updates langchain_agent image tag to '${{ env.COMMIT_TAG }}'."
             }' || echo "⚠️ No PR created (branch may already exist or no changes)."
