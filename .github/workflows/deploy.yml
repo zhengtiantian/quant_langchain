@@ -38,23 +38,33 @@ jobs:
             xiz001/quant_langchain:latest
             xiz001/quant_langchain:${{ env.COMMIT_TAG }}
 
-      - name: Clone quant_docker repository
+      - name: Clone quant_docker repository and update image tag
         run: |
           git clone https://zhengtiantian:${{ secrets.MAIN_REPO_PAT }}@github.com/zhengtiantian/quant_docker.git
           cd quant_docker
+
           sed -i -E "s|(xiz001/quant_langchain:)[^[:space:]]+|\1${{ env.COMMIT_TAG }}|g" docker-compose.yml
+
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git checkout -b update-langchain-${{ env.COMMIT_TAG }}
-          git add docker-compose.yml
-          git commit -m "Update quant_langchain image tag to ${{ env.COMMIT_TAG }}"
-          git push origin update-langchain-${{ env.COMMIT_TAG }}
+
+          # 检查是否有变化
+          if ! git diff --exit-code; then
+            git add docker-compose.yml
+            git commit -m "Update quant_langchain image tag to ${{ env.COMMIT_TAG }}"
+            git push origin update-langchain-${{ env.COMMIT_TAG }}
+          else
+            echo "✅ No changes detected in docker-compose.yml, skipping commit."
+          fi
 
       - name: Create Pull Request
+        if: success()
         env:
           GITHUB_TOKEN: ${{ secrets.MAIN_REPO_PAT }}
         run: |
-          curl -X POST \
+          echo "📝 Creating Pull Request for image tag ${{ env.COMMIT_TAG }}..."
+          curl -s -X POST \
             -H "Authorization: token $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/zhengtiantian/quant_docker/pulls \
@@ -63,4 +73,4 @@ jobs:
               "head": "update-langchain-'${{ env.COMMIT_TAG }}'",
               "base": "main",
               "body": "This PR updates quant_langchain image tag to '${{ env.COMMIT_TAG }}'."
-            }'
+            }' || echo "⚠️ No PR created (branch may already exist or no changes)."
