@@ -5,7 +5,7 @@ on:
     branches: [ main ]
     paths:
       - "langchain_agent/**"
-      - ".github/workflows/build_langchain_agent.yml"
+      - ".github/workflows/deploy.yml"
 
 jobs:
   build:
