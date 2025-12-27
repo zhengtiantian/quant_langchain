@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
     paths:
-      - "langchain_agent/**"
+      - "quant_langchain/**"
       - ".github/workflows/deploy.yml"
 
 jobs:
