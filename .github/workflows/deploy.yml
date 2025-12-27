@@ -1,4 +1,4 @@
-name: Build and Push langchain_agent Image and Create PR
+name: Build and Push quant_langchain Image and Create PR
 
 on:
   push:
@@ -30,27 +30,28 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v6
         with:
-          context: ./langchain_agent
+          context: ./quant_langchain
+          file: ./quant_langchain/Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            xiz001/langchain_agent:latest
-            xiz001/langchain_agent:${{ env.COMMIT_TAG }}
+            xiz001/quant_langchain:latest
+            xiz001/quant_langchain:${{ env.COMMIT_TAG }}
 
       - name: Clone quant_docker repository
         run: |
           git clone https://zhengtiantian:${{ secrets.MAIN_REPO_PAT }}@github.com/zhengtiantian/quant_docker.git
           cd quant_docker
 
-          # 替换 docker-compose.yml 里的 langchain-agent 镜像 tag
-          sed -i -E "s|(xiz001/langchain_agent:)[^[:space:]]+|\1${{ env.COMMIT_TAG }}|g" docker-compose.yml
+          # 更新 docker-compose.yml 中 quant_langchain 镜像版本
+          sed -i -E "s|(xiz001/quant_langchain:)[^[:space:]]+|\1${{ env.COMMIT_TAG }}|g" docker-compose.yml
 
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git checkout -b update-langchain-agent-${{ env.COMMIT_TAG }}
+          git checkout -b update-langchain-${{ env.COMMIT_TAG }}
           git add docker-compose.yml
-          git commit -m "Update langchain_agent image tag to ${{ env.COMMIT_TAG }}"
-          git push origin update-langchain-agent-${{ env.COMMIT_TAG }}
+          git commit -m "Update quant_langchain image tag to ${{ env.COMMIT_TAG }}"
+          git push origin update-langchain-${{ env.COMMIT_TAG }}
 
       - name: Create Pull Request
         env:
@@ -61,8 +62,8 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/zhengtiantian/quant_docker/pulls \
             -d '{
-              "title": "Update langchain_agent image to '${{ env.COMMIT_TAG }}'",
-              "head": "update-langchain-agent-'${{ env.COMMIT_TAG }}'",
+              "title": "Update quant_langchain image to '${{ env.COMMIT_TAG }}'",
+              "head": "update-langchain-'${{ env.COMMIT_TAG }}'",
               "base": "main",
-              "body": "This PR updates langchain_agent image tag to '${{ env.COMMIT_TAG }}'."
+              "body": "This PR updates quant_langchain image tag to '${{ env.COMMIT_TAG }}'."
             }'
