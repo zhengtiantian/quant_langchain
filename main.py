@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
-from langchain.llms import OpenAI
+from langchain_openai import OpenAI
 import os
 import requests
 
