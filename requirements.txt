@@ -1,16 +1,34 @@
+# =========================================================
+#  Quant LangChain Agent dependencies (stable 2025-12)
+# =========================================================
+
+# -------------------------
 # Web framework
+# -------------------------
 fastapi==0.115.0
 uvicorn==0.31.0
 requests==2.31.0
 pydantic==2.12.5
 python-dotenv==1.0.1
 
-# LangChain ecosystem (verified 2025-12)
+# -------------------------
+# LangChain ecosystem (stable verified combo)
+# -------------------------
 langchain==0.3.7
 langchain-core==0.3.15
 langchain-community==0.3.5
-langchain-openai==0.2.3
+langchain-openai==0.2.2
 openai==1.45.0
 
-# Tokenizer
+# -------------------------
+# Tokenizer / utilities
+# -------------------------
 tiktoken==0.8.0
+
+# -------------------------
+# Optional: ensure async/http deps match
+# -------------------------
+aiohttp>=3.9.0,<4.0.0
+SQLAlchemy>=2.0.0,<3.0.0
+PyYAML>=6.0.0
+tenacity>=8.1.0,<10.0.0
