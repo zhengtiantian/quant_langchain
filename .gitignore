@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+*.db
+*.sqlite3
+*.log
+.env
+
+# Virtual environment
+.venv/
+venv/
+env/
+ENV/
+
+# VSCode / JetBrains
+.idea/
+.vscode/
+*.iml
+
+# macOS system files
+.DS_Store
+
+# Cache & temp files
+.cache/
+*.egg-info/
+dist/
+build/
+tmp/
+logs/
+
+# FastAPI / Uvicorn
+*.db-journal
+*.pid
+
+# Ollama / models (if locally stored)
+models/
+data/
+downloads/
+cache_gdelt/
+__temp__/
+
+# Docker
+*.bak
+*.tar
+*.old
+docker-compose.override.yml
+
+# Jupyter / experiments
+.ipynb_checkpoints/
+*.ipynb
