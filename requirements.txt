@@ -1,11 +1,18 @@
+# Web framework
 fastapi==0.115.0
 uvicorn==0.31.0
 requests==2.31.0
-langchain==0.2.14
-langchain-core>=0.2.0
-langchain-community>=0.2.0
-langchain-openai>=0.1.8
-openai==1.43.0
 pydantic==2.12.5
 python-dotenv==1.0.1
+
+# LangChain ecosystem
+langchain==0.3.2
+langchain-core==0.3.8
+langchain-community==0.3.2
+langchain-openai==0.2.2
+
+# OpenAI client (latest supported by langchain-openai 0.2.x)
+openai==1.45.0
+
+# Tokenizer
 tiktoken==0.8.0
