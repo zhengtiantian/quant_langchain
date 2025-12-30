@@ -14,7 +14,7 @@ app = FastAPI(title="Quant LangChain Agent")
 # 环境变量配置
 # =====================================================
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
-OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://host.docker.internal:11434").strip()
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "192.168.1.26:11434").strip()
 LOCAL_MODEL_NAME = os.getenv("LOCAL_MODEL_NAME", "qwen2:1.5b-instruct-q4_K_M").strip()
 QUANT_API = os.getenv("QUANT_API", "http://quant_api:8081").strip()
 
