@@ -17,7 +17,7 @@ app = FastAPI(title="Quant LangChain Agent")
 # 环境变量配置
 # =====================================================
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
-LOCAL_MODEL_NAME = os.getenv("LOCAL_MODEL_NAME", "qwen2:1.5b-instruct-q4_K_M").strip()
+LOCAL_MODEL_NAME = os.getenv("LOCAL_MODEL_NAME", "qwen2.5:7b-instruct-q4_K_M").strip()
 QUANT_API = os.getenv("QUANT_API", "http://quant_api:8081").strip()
 
 
