@@ -66,26 +66,26 @@ def test_ollama_connection():
 # 获取可用 LLM（优先本地 Ollama）
 # =====================================================
 def get_llm(temperature=0.3):
+    print(f"🔍 [Force Check] Expecting model: {LOCAL_MODEL_NAME}")
+
     try:
-        print(f"🔎 [Check] Connecting to Ollama server at {OLLAMA_BASE_URL}/api/tags ...")
         resp = requests.get(f"{OLLAMA_BASE_URL}/api/tags", timeout=3)
-        if resp.status_code == 200:
-            models = resp.json().get("models", [])
-            available_names = [m["name"] for m in models]
-            print(f"✅ [Ollama] Connected successfully! Available models: {available_names}")
+        models = resp.json().get("models", [])
+        available_models = [m["name"] for m in models]
 
-            if LOCAL_MODEL_NAME not in available_names:
-                raise ValueError(f"❌ Model '{LOCAL_MODEL_NAME}' not found in Ollama. Available: {available_names}")
+        print(f"✅ [Ollama] Available models: {available_models}")
 
-            print(f"🚀 [Ollama] Forcing use of model: {LOCAL_MODEL_NAME}")
-            return Ollama(model=LOCAL_MODEL_NAME, base_url=OLLAMA_BASE_URL, temperature=temperature)
-        else:
-            print(f"⚠️ [Ollama] Unexpected HTTP {resp.status_code}")
+        # 如果没找到指定模型，则直接报错
+        if LOCAL_MODEL_NAME not in available_models:
+            raise ValueError(f"❌ Model '{LOCAL_MODEL_NAME}' not found. Available: {available_models}")
+
+        print(f"🚀 [Ollama] Forcing use of model: {LOCAL_MODEL_NAME}")
+        return Ollama(model=LOCAL_MODEL_NAME, base_url=OLLAMA_BASE_URL, temperature=temperature)
+
     except Exception as e:
-        print(f"❌ [Ollama] Connection failed: {e}")
+        print(f"❌ [Ollama] Connection or model selection failed: {e}")
 
-    # Fallback
-    print("⚠️ [Fallback] Ollama unavailable, using OpenAI...")
+    # fallback
     if not OPENAI_API_KEY:
         raise ValueError("❌ No local model or OpenAI API key available!")
     return OpenAI(api_key=OPENAI_API_KEY, temperature=temperature)
