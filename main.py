@@ -33,7 +33,7 @@ def detect_ollama_host():
 
     system_name = platform.system().lower()
     if "darwin" in system_name or "mac" in system_name:
-        return "http://192.168.1.26:11434"
+        return "http://127.0.0.1:11434"
     if "linux" in system_name:
         return "http://127.0.0.1:11434"
     return "http://127.0.0.1:11434"
